@@ -67,7 +67,6 @@ unique_ptr<Compound> parseCompound();
 unique_ptr<Write> parseWrite();
 unique_ptr<Read> parseRead();
 unique_ptr<Assign> parseAssign();
-unique_ptr<Primary> parsePrimary();
 void parseVarDeclSection();
 
 unique_ptr<Read> parseRead() {

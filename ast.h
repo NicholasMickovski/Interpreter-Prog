@@ -35,19 +35,7 @@ struct Statement;
 struct Compound;
 struct Write;
 struct Read;
-struct Primary;
 struct Assign;
-
-
-struct Primary
-{
-  string id;
-
-  virtual ~Primary() = default;
-  virtual void print_tree(ostream& os, string prefix, bool last) = 0;
-  virtual void interpret(ostream& out) = 0;
-
-};
 
 struct Statement 
 {
@@ -68,8 +56,10 @@ struct Assign : Statement
     ast_line(os, prefix, last, "Assign " + id + " :=");
     string child_prefix = prefix + (last ? "    " : "|   ");
     ast_line(os, child_prefix, true, "value: " + value);
-}
+  }
+  //assign interpret function fromm slides
   void interpret(ostream& out) {
+
     (void)out;
     auto& lhs = symbolTable[id]; // guaranteed to exist
     visit([&](auto& slot) {
@@ -90,14 +80,16 @@ struct Assign : Statement
 
 struct Read : Statement
 {
+  //mem var
   string target;
-
+  //mem functions
   void print_tree(ostream& os, string prefix, bool last) {
     ast_line(os, prefix, last, "Read " + target);
   }
   void interpret(ostream& out) {
-    auto it = symbolTable.find(target);
-    visit([&](auto& value) { cin >> value; }, it->second);
+    auto it = symbolTable.find(target); //accessing existing var
+    if (it == symbolTable.end()) {throw runtime_error("undeclared variable"); } //check if the var exists
+    visit([&](auto& value) { cin >> value; }, it->second); //from slides
   };
 };
 
